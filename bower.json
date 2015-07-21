@@ -1,0 +1,26 @@
+{
+  "name": "spark-lines",
+  "version": "0.0.0",
+  "authors": [
+    "anand.anand84@gmail.com"
+  ],
+  "description": "Spark Lines to indentify stock trend",
+  "main": "spark-lines.html",
+  "keywords": [
+    "Spark",
+    "Lines"
+  ],
+  "license": "MIT",
+  "homepage": "traderslab.in",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~1.0.7"
+  }
+}
