@@ -1,0 +1,95 @@
+option java_package = "com.tlab.protobuf.messages";
+option java_outer_classname = "StockMessages";
+
+message Header{
+	required string messageType = 1;
+	required string callBackId = 2;
+	required string handler = 3;
+}
+
+message HeaderReader{
+	required Header header = 1;
+}
+
+message ChartResponseData{
+	required string registrationId = 1;
+	required string scrip = 2;
+	optional int32 interval = 3;
+	repeated uint32 timestamp = 4;
+	repeated double open = 5;
+	repeated double high = 6;
+	repeated double low = 7;
+	repeated double close = 8;
+	repeated uint32 volume =9;
+}
+
+message ChartRequestData{
+	required string registrationId = 1;
+	required string scrip = 2;
+	required int32 interval = 3;
+	required int32 requiredBars = 4;
+	optional uint32 startTime = 5;
+}
+
+message ChartRequest{
+	required Header header = 1;
+	optional ChartRequestData chReqData = 2;
+}
+
+message ChartResponse{
+	required Header header = 1;
+	optional ChartResponseData chResData = 2;
+}
+
+message AvailableScripsRequestData{
+	optional string scrip = 1;
+	optional int32 from = 2;
+	optional int32 limitResultsTo = 3;
+}
+
+message AvailableScripsResponseData{
+	required string scrip = 1;
+	required string type = 2;
+	optional double ltp = 3;
+	required string company = 4;
+	optional uint32 volume = 5;
+	optional string exchange = 6;
+}
+
+message AvailableScripsRequest{
+	required Header header = 1;
+	optional AvailableScripsRequestData reqData = 2;
+}
+
+message AvailableScripsResponse{
+	required Header header = 1;
+	repeated AvailableScripsResponseData resData = 2;
+}
+
+
+message QuoteSubscriptionRequestData{
+	required string scrip = 1;
+	required string exchange = 2;
+	required bool subscribe = 3;
+}
+
+message QuoteSubscriptionResponseData{
+	required string scrip = 1;
+	required string exchange = 2;
+	required double ltp = 3;
+	required uint32 ltt = 4;
+	required uint32 volume=5;
+	optional double percentChange = 6;
+	optional double change = 7;
+}
+
+message QuoteSubscriptionRequest{
+	required Header header = 1;
+	required QuoteSubscriptionRequestData reqData = 2;
+}
+
+message QuoteSubscriptionResponse{
+	required Header header = 1;
+	required QuoteSubscriptionResponseData resData = 2;
+}
+

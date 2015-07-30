@@ -1,14 +1,14 @@
 {
-  "name": "spark-lines",
-  "version": "0.0.2",
+  "name": "auto-complete",
+  "version": "0.0.0",
   "authors": [
     "anand.anand84@gmail.com"
   ],
-  "description": "Spark Lines to indentify stock trend",
-  "main": "spark-lines.html",
+  "description": "Auto Complete element for polymer",
+  "main": "auto-complete.html",
   "keywords": [
-    "Spark",
-    "Lines"
+    "autocomplete",
+    "Polymer"
   ],
   "license": "MIT",
   "homepage": "traderslab.in",
@@ -21,6 +21,12 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~1.0.7"
+    "polymer": "Polymer/polymer#~1.0.7",
+    "tlab-data": "https://bitbucket.org/anand_aravindan/tlab-data.git#latest",
+    "iron-collapse": "PolymerElements/iron-collapse#~1.0.2",
+    "paper-ripple": "PolymerElements/paper-ripple#~1.0.1",
+    "iron-a11y-keys": "PolymerElements/iron-a11y-keys#~1.0.2",
+    "paper-item": "PolymerElements/paper-item#~1.0.2",
+    "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.3"
   }
 }

@@ -1,0 +1,456 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
+
+<iron-iconset-svg name="auto-icons">
+  <defs>
+    <svg>
+      <g id="highlight-off"><path d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></g>
+    </svg>
+   </defs>
+</iron-iconset-svg> 
+
+<dom-module id="auto-complete" on-blur="_clearAndClose">
+  <style >
+    autocomplete{
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      background-attachment: scroll;
+      background-clip: border-box;
+      background-color: rgb(250, 250, 250);
+      background-image: none;
+      background-origin: padding-box;
+      background-size: auto;
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 5px 0px;
+      box-sizing: border-box;
+      color: rgba(0, 0, 0, 0.870588);
+      display: block;
+      font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
+      height: 40px;
+      overflow-x: visible;
+      overflow-y: visible;
+      position: relative;
+    }
+
+    .selected{
+      background-color: gainsboro;
+      border-left: 4px solid cadetblue;
+    }
+
+    .unselected{
+     border-left: 4px solid transparent; 
+    }
+
+    .mouse-selected{
+      background-color: lightblue;
+    }
+
+    .mouse-unselected{
+      
+    }
+
+    autocomplete ul{
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      background-attachment: scroll;
+      background-clip: border-box;
+      background-color: rgb(250, 250, 250);
+      background-image: none;
+      background-origin: padding-box;
+      background-size: auto;
+      box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 5px 0px;
+      box-sizing: border-box;
+      color: rgba(0, 0, 0, 0.870588);
+      display: block;
+      font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
+      left: 0px;
+      list-style-image: none;
+      list-style-position: outside;
+      list-style-type: none;
+      margin-bottom: 0px;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 0px;
+      max-height: 225.5px;
+      overflow-x: auto;
+      overflow-y: auto;
+      padding-bottom: 0px;
+      padding-left: 0px;
+      padding-right: 0px;
+      padding-top: 0px;
+      position: absolute;
+      right: 0px;
+      top: 40px;
+      z-index: 49;
+    }
+
+    autocomplete ul li{
+      position:relative;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      background-attachment: scroll;
+      background-clip: border-box;
+      background-image: none;
+      background-origin: padding-box;
+      background-size: auto;
+      border-top-color: rgb(221, 221, 221);
+      border-top-style: solid;
+      border-top-width: 1px;
+      box-sizing: border-box;
+      color: rgb(33, 33, 33);
+      cursor: pointer;
+      display: list-item;
+      font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
+      font-size: 14px;
+      height: 40px;
+      line-height: 40px;
+      list-style-image: none;
+      list-style-position: outside;
+      list-style-type: none;
+      margin-bottom: 0px;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 0px;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      padding-bottom: 0px;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-top: 0px;
+      text-align: left;
+      transition-delay: 0s;
+      transition-duration: 0.15s;
+      transition-property: background;
+      transition-timing-function: linear;
+    }
+
+    autocomplete ul li.selected{
+      background-color: gainsboro;
+      border-left: 4px solid cadetblue;
+    }
+
+    autocomplete input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      box-shadow: none;
+      padding: 0 15px;
+      font-size: 14px;
+      line-height: 40px;
+      height: 40px;
+      outline: 0;
+      z-index: 2;
+      background: 0 0;
+    }
+
+    paper-item{
+      font-size:14px;
+    }
+
+    paper-icon-button{
+      position: absolute;
+      right: 0px;
+      z-index: 100;
+    }
+
+    paper-progress{
+      position: absolute;
+      bottom: -40px;
+      width: 100%;
+    }
+
+
+  </style>
+  <template>
+        <div>
+          <autocomplete>
+                <div role="listbox">
+                  <div style="position:relative">
+                    <input id="searchBox" type="text" placeholder="[[placeholder]]" class="paper-input-input" value="{{searchValue::input}}">
+                    <template is="dom-if" if="{{showingContainer}}">
+                        <paper-icon-button icon="auto-icons:highlight-off" on-tap="_clearAndClose"></paper-icon-button>
+                    </template>
+                  </input>
+                  <template is="dom-if" if="{{progress}}">
+                  <paper-progress secondaryProgress="10" indeterminate value="3"></paper-progress>
+                </template>
+                  </div>
+                  
+                </div>
+                <iron-collapse id="collapse">
+                  <ul id="ul" role="presentation">
+                    <template id="resultList" is="dom-repeat" items="{{data}}" indexAs="index">
+                      <li id$="{{liId(index)}}" class$="{{getClass(index)}}" on-tap="_selectCurrentItem" on-mouseover="_mouseover" on-mouseout="_mouseout">
+                         <paper-ripple id$="{{rippleId(index)}}" style="pointer-events: none;"></paper-ripple>
+                         <paper-item style="pointer-events: none;">{{item.company}}</paper-item>
+                       </li>
+                    </template>
+                    <template is="dom-if" if="{{isDataEmpty}}">
+                      <li>
+                        <paper-item style="pointer-events: none;">{{noItemsLabel}}</paper-item>
+                      </li>
+                    </template>
+                  </ul>
+                </iron-collapse>
+          </autocomplete>
+          <iron-a11y-keys keys="up down esc enter" on-keys-pressed="keyHandler"></iron-a11y-keys>
+        </div>
+
+  </template>
+</dom-module>
+<script>
+  (function() {
+    Polymer({
+      is: "auto-complete",
+      hostAttributes:{
+        
+      },
+      properties: {
+        delay:{
+          type:Number,
+          value:200
+        },
+        placeholder:{
+          type:String,
+          value:'Enter few characters'
+        },
+        closeOnSelect:{
+          type:Boolean,
+          value:false
+        },
+        noItemsLabel:{
+          type:String,
+          value:"No Items Found"
+        },
+        data: {
+          type:Array,
+          value:[],
+          observer:'show'
+        },
+        label: String,
+        value: {
+          type: Object,
+        },
+        searchValue: {
+          type: String,
+          observer: "_valueChanged",
+          notify:true,
+          reflectToAttribute:true
+        },
+        currentSelection:{
+          type:Object
+        },
+        progress:{
+          type:Boolean,
+          value:false
+        },
+        showingContainer:{
+          type:Boolean,
+          value:false
+        },
+        searchParams:{
+          type:Object,
+          notify:true,
+          reflectToAttribute:true,
+          value:function(){
+            return undefined;
+          }
+        },
+        selectedIndex:{
+          type:Number,
+          value:0,
+          notify:true,
+          reflectToAttribute:true,
+          observer:'_highlightSelection'
+
+        }
+      },
+
+      listeners: {
+      'blur': '_clearAndClose',
+      },
+
+      ready: function() {
+        this.searchValue = '';
+        this.$.resultList.render()
+      },
+
+      isDataEmpty : function(){
+        return this.data.length == 0;
+      },
+
+
+      attached: function() {
+        var handler = function(event){
+          if(event && (event.path.indexOf(this)!=-1)){
+            return;  
+          }
+          this._clearAndClose();
+        };
+        this.exitHandler = handler.bind(this);
+        document.addEventListener('click',this.exitHandler);
+      },
+
+      detached: function() {
+        document.removeEventListener('click',this.exitHandler);
+      },
+
+
+      _highlightSelection:function(newValue,oldValue){
+          var newLiId = 'li'+newValue; 
+          var oldLiId = 'li'+oldValue;
+          var newLi = document.getElementById(newLiId);
+          var oldLi = document.getElementById(oldLiId);
+          if(newLi){
+           newLi.classList.add("selected");
+           newLi.classList.remove("unselected"); 
+          }
+          if(oldLi){
+            oldLi.classList.remove("selected");
+            oldLi.classList.add("unselected");
+          }
+      },
+
+      rippleId:function(index){
+        return 'ripple'+index;
+      },
+
+      liId:function(index){
+        return 'li'+index;
+      },
+
+      getClass:function(index){
+        if(this.selectedIndex == index)
+          return "selected";
+        else
+          return "unselected";
+      },
+
+      _mouseover:function(event){
+        event.target.classList.add("mouse-selected");
+        event.target.classList.remove("mouse-unselected");
+      },
+
+      _mouseout:function(event){
+        event.target.classList.add("mouse-unselected");
+        event.target.classList.remove("mouse-selected");
+      },
+
+      keyHandler:function(event){
+        if(event.detail.keyboardEvent.keyCode == 27){
+          this._clearAndClose();  
+        }
+        else if(event.detail.keyboardEvent.keyCode == 38){
+          if((this.selectedIndex) == 0 ){
+            return;
+          }
+          this.data[this.selectedIndex].selected = false;
+          this.selectedIndex--;
+          this.data[this.selectedIndex].selected = true;
+          this.currentSelection = this.data[this.selectedIndex];
+        }else if(event.detail.keyboardEvent.keyCode == 40){
+          if(this.selectedIndex == (this.data.length - 1) ){
+            return;
+          }
+          this.data[this.selectedIndex].selected = false;
+          this.selectedIndex++;
+          this.data[this.selectedIndex].selected = true;
+          this.currentSelection = this.data[this.selectedIndex];
+        }else{
+          this._selectCurrentItem();
+        }
+        this.updateScroll();
+      },
+
+      updateScroll :function() {
+        var ul = document.getElementById("ul");
+        var li = document.getElementById("li"+this.selectedIndex);
+        if(!li){
+          return;
+        }
+          var top = li.offsetTop,
+          bot = top + li.offsetHeight,
+          hgt = ul.clientHeight;
+        if (top < ul.scrollTop) {
+          ul.scrollTop = top;
+        } else if (bot > ul.scrollTop + hgt) {
+          ul.scrollTop = bot - hgt;
+        }
+    },
+
+    show:function(data){
+        this.set('progress',false);
+        var collapse = this.$.collapse
+        this.selectedIndex = 0;
+        this.updateScroll();
+        if(this.data.length > 0 && this.data[this.selectedIndex])
+          this.data[this.selectedIndex].selected = true;
+        if(!collapse.opened && this.searchValue!=""){
+          collapse.toggle()
+          this.$.resultList.render();
+        }
+      },
+
+      _valueChanged: function(text) {
+        var collapse = this.$.collapse
+        if (text != '') {
+          this.debounce('search',function(){
+            //this.set('searchParams', [{'scrip':text}]);
+            this.set('progress',true);
+            this.set('showingContainer',true);
+            this.fire('filter',text)
+          },this.delay);
+        } else{
+          this._clearAndClose();
+        }
+      },
+
+      _listFilter: function(item) {
+        return item.name.toLowerCase().includes(
+          this.searchValue.toLowerCase()
+        )
+      },
+
+      //Click event from the body.
+      _clearAndClose:function(event){
+        this.set('searchValue', ''); 
+        this.set('showingContainer',false);
+        var collapse = this.$.collapse
+        if (collapse.opened) {
+          collapse.toggle();
+        }
+      },
+
+     
+      _selectCurrentItem:function(event){
+        if(event){
+          this.set('value', event.model.item);
+        }else{
+          this.set('value', this.currentSelection);
+          this.querySelector("#ripple"+this.selectedIndex).simulatedRipple();
+        }
+
+        this.fire('select',this.value);
+
+        if(this.hasAttribute('close-on-select')){
+          this._clearAndClose();
+        }else{
+          this.$.searchBox.focus();
+        }
+      }
+    })
+  })()
+</script>
