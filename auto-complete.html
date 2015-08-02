@@ -173,6 +173,11 @@
     }
 
 
+    #searchBox{
+      text-transform: uppercase;
+    }
+
+
   </style>
   <template>
         <div>
@@ -185,7 +190,7 @@
                     </template>
                   </input>
                   <template is="dom-if" if="{{progress}}">
-                  <paper-progress secondaryProgress="10" indeterminate value="3"></paper-progress>
+                  <paper-progress secondaryProgress="3" indeterminate value="3"></paper-progress>
                 </template>
                   </div>
                   
@@ -398,6 +403,7 @@
         this.updateScroll();
         if(this.data.length > 0 && this.data[this.selectedIndex])
           this.data[this.selectedIndex].selected = true;
+          this.currentSelection = this.data[this.selectedIndex];
         if(!collapse.opened && this.searchValue!=""){
           collapse.toggle()
           this.$.resultList.render();
