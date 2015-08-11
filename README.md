@@ -12,10 +12,10 @@ Add the following dependency in bower.json
 
 Import the element in html.
 
-<link rel="import" href="bower_components/auto-complete/auto-complete.html">
-
-
 ```html
+    
+    <link rel="import" href="bower_components/auto-complete/auto-complete.html">
+    
     <tlab-data id="dataprovider" method="getAvailableScrips" last-response="{{choices}}"> </tlab-data>
     <auto-complete close-on-select id="autocomplete" on-filter="filterchange" delay="200" data="{{choices}}"     placeholder="[[placeholder]]">
     </auto-complete>
