@@ -27,12 +27,14 @@ For demo.
 
 Clone the project.
 
+```
 bower install
 
 npm install -g polyserve
 
-polyserve -p 9998.
+polyserve -p 9998
 
+```
 demo.html will be available.
 
 
